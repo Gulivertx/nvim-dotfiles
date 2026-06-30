@@ -367,6 +367,14 @@ do
     -- Delay between pressing a key and opening which-key (milliseconds)
     delay = 0,
     icons = { mappings = vim.g.have_nerd_font },
+    win = {
+      -- Bordure personnalisée (format Neovim à 8 éléments) :
+      -- { coin-HG, haut, coin-HD, droite, coin-BD, bas, coin-BG, gauche }
+      -- Ici : seule une LIGNE en haut, sans coins.
+      border = { '', '─', '', '', '', '', '', '' },
+      -- Astuce : pour une bordure complète arrondie, remplace par border = 'rounded'
+      -- (styles dispo : 'single', 'double', 'rounded', 'solid', 'shadow', 'none')
+    },
     -- Document existing key chains
     spec = {
       { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
@@ -393,7 +401,9 @@ do
   -- Load the colorscheme here.
   -- Like many other themes, this one has different styles, and you could load
   -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-  vim.cmd.colorscheme 'tokyonight-night'
+  -- NOTE: le colorscheme final est défini dans lua/custom/plugins/colorscheme.lua
+  -- (Xcode Dark), chargé après cette section. Ligne ci-dessous désactivée.
+  -- vim.cmd.colorscheme 'tokyonight-night'
 
   -- Highlight todo, notes, etc in comments
   vim.pack.add { gh 'folke/todo-comments.nvim' }
@@ -692,6 +702,27 @@ do
   --  See `:help lsp-config` for information about keys and how to configure
   ---@type table<string, vim.lsp.Config>
   local servers = {
+    intelephense = {
+      settings = {
+        intelephense = {
+          files = {
+            -- Exclut les dossiers générés pour accélérer l'indexation
+            -- (ne PAS exclure vendor/ : nécessaire pour l'autocomplétion Symfony/Doctrine)
+            exclude = {
+              '**/.git/**',
+              '**/node_modules/**',
+              '**/var/cache/**',
+              '**/var/log/**',
+              '**/public/build/**',
+              '**/.devenv/**',
+              '**/.direnv/**',
+            },
+            maxSize = 5000000, -- ignore les fichiers > 5 Mo
+          },
+        },
+      },
+    },
+    vtsls = {},
     -- clangd = {},
     -- gopls = {},
     -- pyright = {},
@@ -760,6 +791,8 @@ do
   local ensure_installed = vim.tbl_keys(servers or {})
   vim.list_extend(ensure_installed, {
     -- You can add other tools here that you want Mason to install
+    'stylua',
+    'twiggy-language-server',
   })
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -970,13 +1003,13 @@ do
   -- require 'kickstart.plugins.indent_line'
   -- require 'kickstart.plugins.lint'
   -- require 'kickstart.plugins.autopairs'
-  -- require 'kickstart.plugins.neo-tree'
+  require 'kickstart.plugins.neo-tree'
   -- require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
 
   -- NOTE: You can add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- require 'custom.plugins'
+  require 'custom.plugins'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
