@@ -110,7 +110,7 @@ do
   vim.o.number = true
   -- You can also add relative line numbers, to help with jumping.
   --  Experiment for yourself to see if you like it!
-  -- vim.o.relativenumber = true
+  vim.o.relativenumber = true
 
   -- Enable mouse mode, can be useful for resizing splits for example!
   vim.o.mouse = 'a'
@@ -442,18 +442,8 @@ do
   -- - sr)'  - [S]urround [R]eplace [)] [']
   require('mini.surround').setup()
 
-  -- Simple and easy statusline.
-  --  You could remove this setup call if you don't like it,
-  --  and try some other statusline plugin
-  local statusline = require 'mini.statusline'
-  -- Set `use_icons` to true if you have a Nerd Font
-  statusline.setup { use_icons = vim.g.have_nerd_font }
-
-  -- You can configure sections in the statusline by overriding their
-  -- default behavior. For example, here we set the section for
-  -- cursor location to LINE:COLUMN
-  ---@diagnostic disable-next-line: duplicate-set-field
-  statusline.section_location = function() return '%2l:%-2v' end
+  -- mini.statusline désactivé : remplacé par lualine.nvim
+  -- (voir lua/custom/plugins/statusline.lua)
 
   -- ... and there is more!
   --  Check out: https://github.com/nvim-mini/mini.nvim
@@ -726,7 +716,10 @@ do
     -- clangd = {},
     -- gopls = {},
     -- pyright = {},
-    -- rust_analyzer = {},
+    rust_analyzer = {},
+    -- GDScript : se connecte au serveur LSP intégré de Godot (port 6005).
+    -- Godot doit être ouvert pour que le LSP fonctionne.
+    gdscript = {},
     --
     -- Some languages (like typescript) have entire language plugins that can be useful:
     --    https://github.com/pmizio/typescript-tools.nvim
@@ -789,10 +782,16 @@ do
   --
   -- You can press `g?` for help in this menu.
   local ensure_installed = vim.tbl_keys(servers or {})
+  -- rust_analyzer est fourni par rustup (~/.cargo/bin) : on ne le fait pas
+  -- installer par Mason pour éviter les doublons de version.
+  -- rust_analyzer et gdscript viennent de rustup/Godot, pas de Mason.
+  local mason_exclude = { rust_analyzer = true, gdscript = true }
+  ensure_installed = vim.tbl_filter(function(name) return not mason_exclude[name] end, ensure_installed)
   vim.list_extend(ensure_installed, {
     -- You can add other tools here that you want Mason to install
     'stylua',
     'twiggy-language-server',
+    'gdscript-formatter', -- formateur GDScript (GDQuest)
   })
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -829,7 +828,8 @@ do
     },
     -- You can also specify external formatters in here.
     formatters_by_ft = {
-      -- rust = { 'rustfmt' },
+      rust = { 'rustfmt' },
+      gdscript = { 'gdscript_formatter' },
       -- Conform can also run multiple formatters sequentially
       -- python = { "isort", "black" },
       --
