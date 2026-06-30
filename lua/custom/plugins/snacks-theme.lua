@@ -32,7 +32,7 @@ local function link_snacks_highlights()
 end
 
 vim.api.nvim_create_autocmd('ColorScheme', {
-  desc = 'Aligne le fond des floats snacks sur le fond éditeur',
+  desc = 'Align snacks float background with editor background',
   callback = link_snacks_highlights,
 })
 

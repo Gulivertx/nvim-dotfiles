@@ -26,7 +26,7 @@ vim.api.nvim_create_autocmd('StdinReadPre', {
 })
 
 vim.api.nvim_create_autocmd('VimEnter', {
-  desc = 'Ouvre Neo-tree au démarrage si on est dans un projet',
+  desc = 'Open Neo-tree on startup when inside a project',
   callback = function()
     -- Ne rien faire si des fichiers ont été passés en argument
     if vim.fn.argc() > 0 then return end

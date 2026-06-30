@@ -22,7 +22,7 @@ end
 
 -- Ré-applique à chaque changement de colorscheme...
 vim.api.nvim_create_autocmd('ColorScheme', {
-  desc = 'Lie les highlights which-key au colorscheme',
+  desc = 'Link which-key highlights to the active colorscheme',
   callback = link_whichkey_highlights,
 })
 

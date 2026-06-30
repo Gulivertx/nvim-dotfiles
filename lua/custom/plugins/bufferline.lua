@@ -28,11 +28,11 @@ require('bufferline').setup {
 
 -- Raccourcis de navigation entre onglets/buffers
 local map = vim.keymap.set
-map('n', '<Tab>', '<Cmd>BufferLineCycleNext<CR>', { desc = 'Buffer suivant' })
-map('n', '<S-Tab>', '<Cmd>BufferLineCyclePrev<CR>', { desc = 'Buffer précédent' })
-map('n', '<leader>bd', '<Cmd>bdelete<CR>', { desc = '[B]uffer [D]elete (fermer)' })
-map('n', '<leader>bp', '<Cmd>BufferLinePick<CR>', { desc = '[B]uffer [P]ick (choisir)' })
+map('n', '<Tab>',   '<Cmd>BufferLineCycleNext<CR>', { desc = 'Next buffer' })
+map('n', '<S-Tab>', '<Cmd>BufferLineCyclePrev<CR>', { desc = 'Previous buffer' })
+map('n', '<leader>bd', '<Cmd>bdelete<CR>',          { desc = '[B]uffer [D]elete (close)' })
+map('n', '<leader>bp', '<Cmd>BufferLinePick<CR>',   { desc = '[B]uffer [P]ick' })
 -- Aller directement à l'onglet N
 for i = 1, 9 do
-  map('n', '<leader>' .. i, '<Cmd>BufferLineGoToBuffer ' .. i .. '<CR>', { desc = 'Aller au buffer ' .. i })
+  map('n', '<leader>' .. i, '<Cmd>BufferLineGoToBuffer ' .. i .. '<CR>', { desc = 'Go to buffer ' .. i })
 end
