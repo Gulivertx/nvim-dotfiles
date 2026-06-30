@@ -25,6 +25,25 @@ require('snacks').setup {
   -- (notifier, terminal, lazygit, etc.) peuvent être activés plus tard.
   picker = { enabled = true }, -- requis pour Snacks.picker.projects()
   projects = { enabled = true }, -- détection des projets récents
+  -- Snacks picker : configuration de la détection de projets
+  -- On ajoute project.godot comme marqueur racine et les dossiers de dev
+  picker = {
+    enabled = true,
+    sources = {
+      projects = {
+        dev = { '~/develop', '~/dev', '~/projects' },
+        patterns = {
+          'project.godot',  -- Godot
+          '.git',           -- git
+          'package.json',   -- Node / web
+          'Makefile',       -- C/C++
+          'Cargo.toml',     -- Rust
+          'go.mod',         -- Go
+          'pyproject.toml', -- Python
+        },
+      },
+    },
+  },
   lazygit = { enabled = true }, -- intégration lazygit flottant
   dashboard = {
     enabled = true,
