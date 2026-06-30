@@ -17,6 +17,7 @@ vim.keymap.set('n', '\\',         '<Cmd>Neotree reveal<CR>',     { desc = 'Neo-t
 
 require('neo-tree').setup {
   filesystem = {
+    use_libuv_file_watcher = true,            -- surveille le disque en temps réel (pi agent, git…)
     follow_current_file = { enabled = true }, -- surligne le fichier courant
     hijack_netrw_behavior = 'open_current',   -- remplace netrw
     window = {
