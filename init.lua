@@ -692,6 +692,9 @@ do
       },
     },
     vtsls = {},
+    -- LSP Symfony officiel : routes, services, Twig, YAML, traductions…
+    -- Complète intelephense. Binaire fourni par Nix (home.nix), PHP par devenv.
+    symfony_lsp = {},
     -- clangd = {},
     -- gopls = {},
     -- pyright = {},
@@ -763,13 +766,12 @@ do
   local ensure_installed = vim.tbl_keys(servers or {})
   -- rust_analyzer est fourni par rustup (~/.cargo/bin) : on ne le fait pas
   -- installer par Mason pour éviter les doublons de version.
-  -- rust_analyzer et gdscript viennent de rustup/Godot, pas de Mason.
-  local mason_exclude = { rust_analyzer = true, gdscript = true }
+  -- rust_analyzer et gdscript viennent de rustup/Godot, symfony_lsp de Nix, pas de Mason.
+  local mason_exclude = { rust_analyzer = true, gdscript = true, symfony_lsp = true }
   ensure_installed = vim.tbl_filter(function(name) return not mason_exclude[name] end, ensure_installed)
   vim.list_extend(ensure_installed, {
     -- You can add other tools here that you want Mason to install
     'stylua',
-    'twiggy-language-server',
     'gdscript-formatter', -- formateur GDScript (GDQuest)
   })
 
