@@ -1,6 +1,6 @@
 -- ============================================================
 -- Colorscheme : Xcode Dark (esthétique « macOS Dark » d'Apple)
--- Chargé après init.lua, donc remplace le tokyonight par défaut.
+-- Chargé après init.lua.
 -- ============================================================
 
 vim.pack.add { 'https://github.com/arzg/vim-colors-xcode' }
