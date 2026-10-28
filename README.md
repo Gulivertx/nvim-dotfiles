@@ -22,6 +22,8 @@ blink.cmp, mini.nvim, ...), the following customizations live in
 
 | File | Purpose |
 |------|---------|
+| `keymaps.lua` | Keymaps following the [LazyVim](https://www.lazyvim.org/keymaps) layout |
+| `flash.lua` | Jump anywhere on screen with `s` / `S` ([flash.nvim](https://github.com/folke/flash.nvim)) |
 | `dashboard.lua` | Start screen ([snacks.nvim](https://github.com/folke/snacks.nvim)) with logo, recent files, projects, lazygit |
 | `colorscheme.lua` | **Xcode Dark** theme ([vim-colors-xcode](https://github.com/arzg/vim-colors-xcode)) with a transparent background |
 | `statusline.lua` | Statusline ([lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)) with git branch, diff and diagnostics |
@@ -222,24 +224,52 @@ Plugins removed on the other machine stay on disk: delete them with `vim.pack.de
 
 ---
 
-## Key mappings (in addition to kickstart)
+## Key mappings
 
-`<leader>` = **Space**
+Keymaps follow the [LazyVim layout](https://www.lazyvim.org/keymaps), so its documentation
+and cheat sheets apply. Telescope is used as the picker, and LazyVim plugins that are not
+installed here (trouble, noice, grug-far, persistence, ...) have no mappings.
+
+`<leader>` = **Space**. Press it and wait: **which-key** lists every group and mapping.
+`<leader>sk` fuzzy-searches all of them.
+
+| Group | Prefix |
+|-------|--------|
+| Buffers | `<leader>b` |
+| Code / LSP | `<leader>c` |
+| Files / find | `<leader>f` |
+| Git (hunks under `<leader>gh`) | `<leader>g` |
+| Search | `<leader>s` |
+| UI toggles | `<leader>u` |
+| Windows | `<leader>w` |
+| Diagnostics / quickfix | `<leader>x` |
+| Tabs | `<leader><tab>` |
+
+The most useful ones:
 
 | Mapping | Action |
 |---------|--------|
-| `\` | Reveal the current file in **neo-tree** |
+| `<leader><space>` | Find files (project root) |
+| `<leader>/` | Grep (project root) |
+| `<leader>,` | Open buffers |
+| `<leader>fr` | Recent files |
 | `<leader>e` | Toggle neo-tree |
-| `Tab` / `Shift+Tab` | Next / previous buffer |
-| `<leader>1` ... `9` | Go to buffer N |
-| `<leader>bp` | Pick a buffer |
-| `<leader>bd` | Close the current buffer |
+| `Shift+h` / `Shift+l` | Previous / next buffer |
+| `<leader>bd` | Delete buffer |
+| `gd` / `gr` | Go to definition / references |
+| `K` | Hover documentation |
+| `<leader>ca` / `<leader>cr` | Code action / rename |
+| `<leader>cf` | Format |
+| `<leader>cd` | Line diagnostics |
+| `]d` / `[d` | Next / previous diagnostic |
+| `]h` / `[h` | Next / previous git hunk |
 | `<leader>gg` | Lazygit |
-| `<leader>rr` | Reload buffers changed on disk |
-| `<leader>tm` | Toggle Markdown rendering |
-| `<leader>go` | Open Godot for the current project |
-| `<leader>` (then wait) | **which-key**: shows every mapping |
-| `:Telescope keymaps` | Fuzzy-search every mapping |
+| `s` | Flash jump |
+| `gsa` / `gsd` / `gsr` | Add / delete / replace surrounding |
+| `<C-s>` | Save |
+| `<leader>-` / `<leader>\|` | Split below / right |
+| `<leader>um` | Toggle Markdown rendering |
+| `<leader>qq` | Quit all |
 
 From the dashboard: `f` files, `g` grep, `r` recent, `p` projects, `c` config.
 

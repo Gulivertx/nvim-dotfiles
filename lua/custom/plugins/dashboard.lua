@@ -6,19 +6,7 @@
 -- Plugin install (vim.pack = built-in manager, as in init.lua)
 vim.pack.add { 'https://github.com/folke/snacks.nvim' }
 
--- ── Lazygit / Git keymaps ──────────────────────────────────
-vim.keymap.set('n', '<leader>gg', function() Snacks.lazygit() end,            { desc = 'Lazygit (repo)' })
-vim.keymap.set('n', '<leader>gf', function() Snacks.lazygit.log_file() end,   { desc = 'Lazygit log current file' })
-vim.keymap.set('n', '<leader>gl', function() Snacks.lazygit.log() end,        { desc = 'Lazygit log (repo)' })
-
--- Gitsigns : hunk navigation and quick actions
-vim.keymap.set('n', ']h', function() require('gitsigns').next_hunk() end,     { desc = 'Next hunk' })
-vim.keymap.set('n', '[h', function() require('gitsigns').prev_hunk() end,     { desc = 'Previous hunk' })
-vim.keymap.set('n', '<leader>hp', function() require('gitsigns').preview_hunk() end,   { desc = '[H]unk [P]review' })
-vim.keymap.set('n', '<leader>hs', function() require('gitsigns').stage_hunk() end,    { desc = '[H]unk [S]tage' })
-vim.keymap.set('n', '<leader>hu', function() require('gitsigns').undo_stage_hunk() end, { desc = '[H]unk [U]ndo stage' })
-vim.keymap.set('n', '<leader>hr', function() require('gitsigns').reset_hunk() end,    { desc = '[H]unk [R]eset' })
-vim.keymap.set('n', '<leader>hb', function() require('gitsigns').blame_line { full = true } end, { desc = '[H]unk [B]lame line' })
+-- Git and lazygit keymaps are in keymaps.lua
 
 require('snacks').setup {
   -- Only the modules below are enabled; other snacks modules

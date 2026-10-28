@@ -33,9 +33,3 @@ vim.api.nvim_create_autocmd('FileChangedShellPost', {
     )
   end,
 })
-
--- Manual keymap: <leader>rr forces a reload of changed buffers
-vim.keymap.set('n', '<leader>rr', '<Cmd>checktime<CR>', {
-  desc = '[R]eload changed buffers',
-  silent = true,
-})

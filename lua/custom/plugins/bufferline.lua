@@ -26,13 +26,21 @@ require('bufferline').setup {
   },
 }
 
--- Keymaps to navigate between tabs/buffers
+-- Buffer keymaps (LazyVim layout)
 local map = vim.keymap.set
-map('n', '<Tab>',   '<Cmd>BufferLineCycleNext<CR>', { desc = 'Next buffer' })
-map('n', '<S-Tab>', '<Cmd>BufferLineCyclePrev<CR>', { desc = 'Previous buffer' })
-map('n', '<leader>bd', '<Cmd>bdelete<CR>',          { desc = '[B]uffer [D]elete (close)' })
-map('n', '<leader>bp', '<Cmd>BufferLinePick<CR>',   { desc = '[B]uffer [P]ick' })
--- Jump straight to tab N
-for i = 1, 9 do
-  map('n', '<leader>' .. i, '<Cmd>BufferLineGoToBuffer ' .. i .. '<CR>', { desc = 'Go to buffer ' .. i })
-end
+map('n', '<S-h>', '<Cmd>BufferLineCyclePrev<CR>', { desc = 'Prev Buffer' })
+map('n', '<S-l>', '<Cmd>BufferLineCycleNext<CR>', { desc = 'Next Buffer' })
+map('n', '[b', '<Cmd>BufferLineCyclePrev<CR>', { desc = 'Prev Buffer' })
+map('n', ']b', '<Cmd>BufferLineCycleNext<CR>', { desc = 'Next Buffer' })
+map('n', '[B', '<Cmd>BufferLineMovePrev<CR>', { desc = 'Move buffer prev' })
+map('n', ']B', '<Cmd>BufferLineMoveNext<CR>', { desc = 'Move buffer next' })
+map('n', '<leader>bb', '<Cmd>e #<CR>', { desc = 'Switch to Other Buffer' })
+map('n', '<leader>`', '<Cmd>e #<CR>', { desc = 'Switch to Other Buffer' })
+map('n', '<leader>bd', function() Snacks.bufdelete() end, { desc = 'Delete Buffer' })
+map('n', '<leader>bo', function() Snacks.bufdelete.other() end, { desc = 'Delete Other Buffers' })
+map('n', '<leader>bD', '<Cmd>bd<CR>', { desc = 'Delete Buffer and Window' })
+map('n', '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', { desc = 'Toggle Pin' })
+map('n', '<leader>bP', '<Cmd>BufferLineGroupClose ungrouped<CR>', { desc = 'Delete Non-Pinned Buffers' })
+map('n', '<leader>br', '<Cmd>BufferLineCloseRight<CR>', { desc = 'Delete Buffers to the Right' })
+map('n', '<leader>bl', '<Cmd>BufferLineCloseLeft<CR>', { desc = 'Delete Buffers to the Left' })
+map('n', '<leader>bj', '<Cmd>BufferLinePick<CR>', { desc = 'Pick Buffer' })

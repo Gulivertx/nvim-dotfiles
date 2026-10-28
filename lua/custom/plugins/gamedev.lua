@@ -26,9 +26,6 @@ vim.api.nvim_create_user_command('GodotOpen', function()
   vim.fn.jobstart({ GODOT_BIN, '--path', root }, { detach = true })
 end, { desc = 'Open Godot for the current project' })
 
--- Keymap: <leader>go = open Godot
-vim.keymap.set('n', '<leader>go', '<Cmd>GodotOpen<CR>', { desc = '[G]odot [O]pen editor' })
-
 -- Warn when opening a .gd file while Godot (LSP port 6005) is not running
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'gdscript',

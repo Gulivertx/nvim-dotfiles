@@ -18,4 +18,4 @@ require('render-markdown').setup {
 }
 
 -- Toggle rendered / raw
-vim.keymap.set('n', '<leader>tm', '<Cmd>RenderMarkdown toggle<CR>', { desc = '[T]oggle [M]arkdown render' })
+vim.keymap.set('n', '<leader>um', '<Cmd>RenderMarkdown toggle<CR>', { desc = 'Render Markdown' })
