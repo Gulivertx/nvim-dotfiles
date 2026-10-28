@@ -5,7 +5,7 @@ nvim
 
 spell/
 
-# nvim-pack-lock.json EST suivi (tracké) dans cette config perso pour garantir
-# une réinstallation à l'identique des plugins. Voir :help vim.pack-lockfile
+# nvim-pack-lock.json IS tracked in this personal config so that plugins are
+# reinstalled at exactly the same versions. See :help vim.pack-lockfile
 
 .DS_Store

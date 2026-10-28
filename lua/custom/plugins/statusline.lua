@@ -1,35 +1,35 @@
 -- ============================================================
 -- Statusline : lualine.nvim
--- Remplace mini.statusline (configuré dans init.lua)
+-- Replaces mini.statusline (configured in init.lua)
 -- ============================================================
 
 vim.pack.add {
   'https://github.com/nvim-lualine/lualine.nvim',
-  -- nvim-web-devicons déjà chargé par bufferline
+  -- nvim-web-devicons already loaded by bufferline
 }
 
--- Thème : 'auto' lit les highlight groups du colorscheme actif (xcodedark ici).
--- Si tu changes de colorscheme, la statusline s'adapte automatiquement.
--- Alternatives possibles : 'auto', 'onedark', 'gruvbox', 'tokyonight', ...
+-- Theme: 'auto' reads the highlight groups of the active colorscheme (xcodedark here).
+-- If you change colorscheme, the statusline adapts automatically.
+-- Other options: 'auto', 'onedark', 'gruvbox', 'tokyonight', ...
 --
--- Comment ça marche :
---   section A  → reprend bg/fg de hl 'Normal' + couleur d'accent par mode
---   section B  → reprend bg de 'StatusLine', fg de 'Normal'
---   section C  → reprend les couleurs de 'StatusLineNC'
+-- How it works:
+--   section A  → bg/fg from hl 'Normal' + an accent color per mode
+--   section B  → bg from 'StatusLine', fg from 'Normal'
+--   section C  → colors from 'StatusLineNC'
 --
--- Pour inspecter les groupes disponibles dans ton thème courant :
+-- To inspect the groups available in the current theme:
 --   :hi Normal
---   :Telescope highlights  (si telescope est installé)
+--   :Telescope highlights  (if telescope is installed)
 local lualine_theme = 'auto'
 
--- Composant : branche git (icône Nerd Font)
+-- Component: git branch (Nerd Font icon)
 local function git_branch()
   local branch = vim.b.gitsigns_head
   if not branch or branch == '' then return '' end
   return '  ' .. branch
 end
 
--- Composant : diff git (ajouts/modifs/supprims via gitsigns)
+-- Component: git diff (added/changed/removed via gitsigns)
 local function git_diff()
   local status = vim.b.gitsigns_status_dict
   if not status then return '' end
@@ -40,7 +40,7 @@ local function git_diff()
   return table.concat(parts, ' ')
 end
 
--- Composant : nom du fichier relatif + état modifié
+-- Component: relative file name + modified state
 local function filename()
   local name = vim.fn.expand '%:~:.'
   if name == '' then name = '[No Name]' end
@@ -49,7 +49,7 @@ local function filename()
   return name
 end
 
--- Composant : diagnostics LSP (E/W/I/H)
+-- Component: LSP diagnostics (E/W/I/H)
 local diagnostics = {
   'diagnostics',
   sources       = { 'nvim_lsp', 'nvim_diagnostic' },
@@ -59,7 +59,7 @@ local diagnostics = {
   always_visible = false,
 }
 
--- Composant : type de fichier avec icône
+-- Component: file type with icon
 local filetype = {
   'filetype',
   icon_only = false,
@@ -69,19 +69,19 @@ local filetype = {
 require('lualine').setup {
   options = {
     theme                = lualine_theme,
-    component_separators = { left = '', right = '' },  -- séparateurs fins
-    section_separators   = { left = '', right = '' },  -- séparateurs powerline
-    globalstatus         = true,   -- une seule statusline pour toutes les fenêtres
+    component_separators = { left = '', right = '' },  -- thin separators
+    section_separators   = { left = '', right = '' },  -- powerline separators
+    globalstatus         = true,   -- a single statusline for all windows
     refresh              = { statusline = 1000 },
   },
 
   sections = {
-    -- Gauche
+    -- Left
     lualine_a = { 'mode' },
     lualine_b = { git_branch, git_diff },
     lualine_c = { filename },
 
-    -- Droite
+    -- Right
     lualine_x = { diagnostics, filetype },
     lualine_y = {
       { 'encoding', fmt = string.upper },
@@ -95,6 +95,6 @@ require('lualine').setup {
     lualine_x = { 'location' },
   },
 
-  -- Extensions : adapte l'affichage aux fenêtres spéciales
+  -- Extensions: adapt the display to special windows
   extensions = { 'neo-tree', 'quickfix', 'lazy', 'mason', 'nvim-dap-ui' },
 }

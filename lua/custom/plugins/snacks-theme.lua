@@ -1,22 +1,22 @@
 -- ============================================================
--- Aligne le fond des fenêtres flottantes de snacks (picker, etc.)
--- sur le fond de l'éditeur.
--- Par défaut snacks lie SnacksNormal -> NormalFloat, que le thème
--- xcode rend différent du fond principal (Normal).
+-- Align the background of snacks floating windows (picker, etc.)
+-- with the editor background.
+-- By default snacks links SnacksNormal -> NormalFloat, which the
+-- xcode theme renders differently from the main background (Normal).
 -- ============================================================
 
 local function link_snacks_highlights()
   local links = {
-    SnacksNormal = 'Normal', -- fond des fenêtres snacks = fond éditeur
-    SnacksNormalNC = 'Normal', -- idem quand la fenêtre n'a pas le focus
-    SnacksBackdrop = 'Normal', -- supprime l'assombrissement de l'arrière-plan
-    -- Le picker remappe NormalFloat vers ces groupes par sous-fenêtre :
-    SnacksPicker = 'Normal', -- la boîte englobante
-    SnacksPickerList = 'Normal', -- la liste des résultats
-    SnacksPickerInput = 'Normal', -- le champ de saisie
-    SnacksPickerPreview = 'Normal', -- l'aperçu
+    SnacksNormal = 'Normal', -- snacks window background = editor background
+    SnacksNormalNC = 'Normal', -- same when the window is not focused
+    SnacksBackdrop = 'Normal', -- remove the dimmed backdrop
+    -- The picker remaps NormalFloat to these groups per sub-window:
+    SnacksPicker = 'Normal', -- the outer box
+    SnacksPickerList = 'Normal', -- the results list
+    SnacksPickerInput = 'Normal', -- the input field
+    SnacksPickerPreview = 'Normal', -- the preview
     SnacksPickerBox = 'Normal',
-    -- Bordures / titres : même fond que l'éditeur
+    -- Borders / titles: same background as the editor
     SnacksPickerBorder = 'Normal',
     SnacksPickerTitle = 'Normal',
     SnacksPickerFooter = 'Normal',

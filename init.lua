@@ -368,12 +368,12 @@ do
     delay = 0,
     icons = { mappings = vim.g.have_nerd_font },
     win = {
-      -- Bordure personnalisée (format Neovim à 8 éléments) :
-      -- { coin-HG, haut, coin-HD, droite, coin-BD, bas, coin-BG, gauche }
-      -- Ici : seule une LIGNE en haut, sans coins.
+      -- Custom border (Neovim 8-element format):
+      -- { top-left, top, top-right, right, bottom-right, bottom, bottom-left, left }
+      -- Here: a single LINE on top, no corners.
       border = { '', '─', '', '', '', '', '', '' },
-      -- Astuce : pour une bordure complète arrondie, remplace par border = 'rounded'
-      -- (styles dispo : 'single', 'double', 'rounded', 'solid', 'shadow', 'none')
+      -- Tip: for a full rounded border, use border = 'rounded'
+      -- (available styles: 'single', 'double', 'rounded', 'solid', 'shadow', 'none')
     },
     -- Document existing key chains
     spec = {
@@ -421,8 +421,8 @@ do
   -- - sr)'  - [S]urround [R]eplace [)] [']
   require('mini.surround').setup()
 
-  -- mini.statusline désactivé : remplacé par lualine.nvim
-  -- (voir lua/custom/plugins/statusline.lua)
+  -- mini.statusline disabled: replaced by lualine.nvim
+  -- (see lua/custom/plugins/statusline.lua)
 
   -- ... and there is more!
   --  Check out: https://github.com/nvim-mini/mini.nvim
@@ -675,8 +675,8 @@ do
       settings = {
         intelephense = {
           files = {
-            -- Exclut les dossiers générés pour accélérer l'indexation
-            -- (ne PAS exclure vendor/ : nécessaire pour l'autocomplétion Symfony/Doctrine)
+            -- Exclude generated directories to speed up indexing
+            -- (do NOT exclude vendor/: required for Symfony/Doctrine completion)
             exclude = {
               '**/.git/**',
               '**/node_modules/**',
@@ -686,21 +686,21 @@ do
               '**/.devenv/**',
               '**/.direnv/**',
             },
-            maxSize = 5000000, -- ignore les fichiers > 5 Mo
+            maxSize = 5000000, -- skip files larger than 5 MB
           },
         },
       },
     },
     vtsls = {},
-    -- LSP Symfony officiel : routes, services, Twig, YAML, traductions…
-    -- Complète intelephense. Binaire fourni par Nix (home.nix), PHP par devenv.
+    -- Official Symfony LSP: routes, services, Twig, YAML, translations...
+    -- Complements intelephense. Not in Mason: the `symfony-lsp` binary must be on PATH.
     symfony_lsp = {},
     -- clangd = {},
     -- gopls = {},
     -- pyright = {},
     rust_analyzer = {},
-    -- GDScript : se connecte au serveur LSP intégré de Godot (port 6005).
-    -- Godot doit être ouvert pour que le LSP fonctionne.
+    -- GDScript: connects to Godot's built-in LSP server (port 6005).
+    -- Godot must be running for the LSP to work.
     gdscript = {},
     --
     -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -764,9 +764,8 @@ do
   --
   -- You can press `g?` for help in this menu.
   local ensure_installed = vim.tbl_keys(servers or {})
-  -- rust_analyzer est fourni par rustup (~/.cargo/bin) : on ne le fait pas
-  -- installer par Mason pour éviter les doublons de version.
-  -- rust_analyzer et gdscript viennent de rustup/Godot, symfony_lsp de Nix, pas de Mason.
+  -- Servers not installed by Mason: rust_analyzer comes from rustup (~/.cargo/bin)
+  -- to avoid duplicate versions, gdscript from Godot, symfony_lsp from its own release.
   local mason_exclude = { rust_analyzer = true, gdscript = true, symfony_lsp = true }
   ensure_installed = vim.tbl_filter(function(name) return not mason_exclude[name] end, ensure_installed)
   vim.list_extend(ensure_installed, {

@@ -1,41 +1,41 @@
 -- ============================================================
--- Auto-reload : recharge les buffers modifiés par des outils
--- externes (pi agent, git, etc.) sans redémarrer Neovim.
+-- Auto-reload: reloads buffers changed by external tools
+-- (coding agents, git, etc.) without restarting Neovim.
 -- ============================================================
 
--- Active la détection automatique des changements de fichiers
+-- Enable automatic detection of file changes
 vim.o.autoread = true
 
--- Triggers : vérifie les fichiers modifiés à chaque occasion naturelle
+-- Triggers: check for changed files at every natural opportunity
 vim.api.nvim_create_autocmd({
-  'FocusGained',    -- Neovim reprend le focus (retour depuis le terminal)
-  'BufEnter',       -- on entre dans un buffer
-  'CursorHold',     -- curseur immobile (délai = updatetime)
-  'CursorHoldI',    -- idem en mode insertion
+  'FocusGained',    -- Neovim regains focus (back from the terminal)
+  'BufEnter',       -- entering a buffer
+  'CursorHold',     -- cursor idle (delay = updatetime)
+  'CursorHoldI',    -- same in insert mode
 }, {
-  desc = 'Recharge les buffers modifiés par des outils externes',
+  desc = 'Reload buffers changed by external tools',
   callback = function()
-    -- checktime recharge silencieusement tous les buffers dont le fichier
-    -- sur disque est plus récent que la version en mémoire.
+    -- checktime silently reloads every buffer whose file on disk
+    -- is newer than the version in memory.
     if vim.fn.getcmdwintype() == '' then
       vim.cmd 'checktime'
     end
   end,
 })
 
--- Notifie quand un fichier est rechargé (optionnel, désactiver si trop verbeux)
+-- Notify when a file is reloaded (optional, disable if too noisy)
 vim.api.nvim_create_autocmd('FileChangedShellPost', {
-  desc = 'Notifie quand un fichier est rechargé depuis le disque',
+  desc = 'Notify when a file is reloaded from disk',
   callback = function()
     vim.notify(
-      '↻  ' .. vim.fn.expand '%:t' .. ' rechargé (modifié en dehors de Neovim)',
+      '↻  ' .. vim.fn.expand '%:t' .. ' reloaded (changed outside Neovim)',
       vim.log.levels.INFO
     )
   end,
 })
 
--- Raccourci manuel : <leader>rr pour forcer le rechargement du buffer courant
+-- Manual keymap: <leader>rr forces a reload of changed buffers
 vim.keymap.set('n', '<leader>rr', '<Cmd>checktime<CR>', {
-  desc = '[R]eload : recharge les buffers modifiés',
+  desc = '[R]eload changed buffers',
   silent = true,
 })

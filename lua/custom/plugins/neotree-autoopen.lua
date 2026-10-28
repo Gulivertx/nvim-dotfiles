@@ -1,14 +1,14 @@
 -- ============================================================
--- Ouvre Neo-tree automatiquement au démarrage si on est dans un projet.
--- Un « projet » = le cwd contient un de ces marqueurs racine.
--- Ne se déclenche pas si nvim est lancé sur un fichier précis ou en pipe.
+-- Open Neo-tree automatically on startup when inside a project.
+-- A "project" = the cwd contains one of these root markers.
+-- Does not trigger when nvim is started on a specific file or from a pipe.
 -- ============================================================
 
 local project_markers = {
   '.git',
-  'composer.json', -- projets PHP / Symfony
-  'package.json', -- projets JS/TS
-  'devenv.nix', -- ce projet (devenv)
+  'composer.json', -- PHP / Symfony projects
+  'package.json', -- JS/TS projects
+  'devenv.nix', -- devenv projects
   '.luarc.json',
 }
 
@@ -19,7 +19,7 @@ local function in_project()
   return false
 end
 
--- Détecte si l'entrée provient d'un pipe / stdin (ex. `cat f | nvim -`)
+-- Detect input coming from a pipe / stdin (e.g. `cat f | nvim -`)
 local stdin_read = false
 vim.api.nvim_create_autocmd('StdinReadPre', {
   callback = function() stdin_read = true end,
@@ -28,14 +28,14 @@ vim.api.nvim_create_autocmd('StdinReadPre', {
 vim.api.nvim_create_autocmd('VimEnter', {
   desc = 'Open Neo-tree on startup when inside a project',
   callback = function()
-    -- Ne rien faire si des fichiers ont été passés en argument
+    -- Do nothing if files were passed as arguments
     if vim.fn.argc() > 0 then return end
-    -- Ne rien faire si l'entrée vient d'un pipe / stdin
+    -- Do nothing if input comes from a pipe / stdin
     if stdin_read then return end
     if not in_project() then return end
 
-    -- `show` ouvre la sidebar SANS lui donner le focus,
-    -- pour que le dashboard reste actif dans la fenêtre principale.
+    -- `show` opens the sidebar WITHOUT focusing it,
+    -- so the dashboard stays active in the main window.
     vim.schedule(function() vim.cmd 'Neotree show left' end)
   end,
 })

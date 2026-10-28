@@ -1,119 +1,185 @@
-# Configuration Neovim
+# Neovim Configuration
 
-Configuration personnelle de Neovim, basée sur [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim)
-et utilisant le gestionnaire de plugins intégré **`vim.pack`** (Neovim ≥ 0.12).
+Personal Neovim configuration based on [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim),
+using the built-in **`vim.pack`** plugin manager (Neovim 0.12 or later).
 
-Pensée pour un environnement **macOS + nix-darwin**, avec un focus sur le développement
-**PHP/Symfony** et **TypeScript**.
+Focused on **PHP/Symfony** and **TypeScript** development. System dependencies are managed
+with Nix on every platform:
 
----
-
-## ✨ Ce que contient cette config
-
-En plus de la base kickstart (LSP, Treesitter, Telescope, which-key, gitsigns, conform,
-blink.cmp, mini.nvim…), les personnalisations suivantes ont été ajoutées dans
-[`lua/custom/plugins/`](lua/custom/plugins) :
-
-| Fichier | Rôle |
-|---------|------|
-| `dashboard.lua` | Écran d'accueil ([snacks.nvim](https://github.com/folke/snacks.nvim)) avec logo, fichiers récents, projets |
-| `colorscheme.lua` | Thème **Xcode Dark** ([vim-colors-xcode](https://github.com/arzg/vim-colors-xcode)) — esthétique « macOS Dark » |
-| `bufferline.lua` | Barre d'onglets en haut ([bufferline.nvim](https://github.com/akinsho/bufferline.nvim)) |
-| `neotree-autoopen.lua` | Ouvre l'explorateur **neo-tree** au démarrage si on est dans un projet |
-| `markdown.lua` | Rendu Markdown dans le buffer ([render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim)) |
-| `which-key-theme.lua` | Aligne les couleurs/bordure de which-key sur le thème |
-| `snacks-theme.lua` | Aligne le fond des fenêtres snacks (picker) sur le fond de l'éditeur |
-
-**LSP gérés via Mason** : `intelephense` (PHP/Symfony), `vtsls` (TypeScript),
-`twiggy-language-server` (Twig), `lua_ls`, + formatters (`php-cs-fixer`, `prettier`, `stylua`).
+| Platform | Setup |
+|----------|-------|
+| macOS | [nix-darwin](https://github.com/nix-darwin/nix-darwin) |
+| NixOS | NixOS configuration or Home Manager |
+| Other Linux distributions | [Nix package manager](https://nixos.org/download/) (`nix profile` or standalone Home Manager) |
 
 ---
 
-## 📋 Prérequis
+## Features
 
-Cette config s'appuie sur des outils externes. Sur macOS avec **nix-darwin**, ajoute-les
-à ta configuration (`environment.systemPackages`) :
+On top of the kickstart base (LSP, Treesitter, Telescope, which-key, gitsigns, conform,
+blink.cmp, mini.nvim, ...), the following customizations live in
+[`lua/custom/plugins/`](lua/custom/plugins):
+
+| File | Purpose |
+|------|---------|
+| `dashboard.lua` | Start screen ([snacks.nvim](https://github.com/folke/snacks.nvim)) with logo, recent files, projects, lazygit |
+| `colorscheme.lua` | **Xcode Dark** theme ([vim-colors-xcode](https://github.com/arzg/vim-colors-xcode)) with a transparent background |
+| `statusline.lua` | Statusline ([lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)) with git branch, diff and diagnostics |
+| `bufferline.lua` | Tab bar at the top ([bufferline.nvim](https://github.com/akinsho/bufferline.nvim)) |
+| `neotree-autoopen.lua` | Opens the **neo-tree** explorer on startup when inside a project |
+| `autoreload.lua` | Reloads buffers changed on disk by external tools (coding agents, git) |
+| `markdown.lua` | In-buffer Markdown rendering ([render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim)) |
+| `gamedev.lua` | Godot / GDScript support (`:GodotOpen`, file types, LSP warning) |
+| `which-key-theme.lua` | Aligns which-key colors and border with the theme |
+| `snacks-theme.lua` | Aligns snacks floating windows (picker) with the editor background |
+
+### Language servers
+
+| Server | Language | Installed by |
+|--------|----------|--------------|
+| `intelephense` | PHP | Mason |
+| `symfony_lsp` | Symfony (PHP, Twig, YAML, translations, ...) | Manual, see below |
+| `vtsls` | TypeScript / JavaScript | Mason |
+| `lua_ls` | Lua | Mason |
+| `rust_analyzer` | Rust | rustup |
+| `gdscript` | GDScript | Built into Godot (port 6005) |
+
+Formatters: `stylua` and `gdscript-formatter` (Mason), `rustfmt` (rustup).
+
+---
+
+## Requirements
+
+The configuration relies on a few external tools:
+
+| Tool | Why |
+|------|-----|
+| `neovim` | 0.12 or later, for `vim.pack` |
+| `nodejs` | Runs the Node-based servers installed by Mason (intelephense, vtsls) |
+| `tree-sitter` | CLI used by nvim-treesitter to build parsers |
+| `gcc`, `gnumake` | Compile Treesitter parsers |
+| `ripgrep`, `fd` | Search (Telescope / snacks picker) |
+| `git`, `curl`, `unzip`, `wget` | Plugin and Mason downloads |
+| `lazygit` | Optional, git UI |
+| A Nerd Font | Icons (dashboard, neo-tree, bufferline, statusline) |
+
+### macOS (nix-darwin)
 
 ```nix
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
-    neovim        # ≥ 0.12 (pour vim.pack)
-    nodejs_24     # dernière LTS — requis par Mason (intelephense, vtsls) et certains LSP
-    tree-sitter   # CLI requis par nvim-treesitter
-    ripgrep       # recherche (telescope / snacks picker)
-    fd            # recherche de fichiers
-    gcc           # compilation des parsers treesitter
-    gnumake
-    git
-    curl
-    unzip
-    lazygit       # (optionnel) UI git
+    neovim tree-sitter nodejs_24 gcc gnumake
+    ripgrep fd git curl unzip wget lazygit
   ];
 
-  fonts.packages = with pkgs; [
-    nerd-fonts.jetbrains-mono   # icônes (dashboard, neo-tree, bufferline…)
-  ];
+  fonts.packages = with pkgs; [ nerd-fonts.jetbrains-mono ];
 }
 ```
 
-Puis applique : `darwin-rebuild switch --flake ~/.config/nix-darwin`
+Apply with `darwin-rebuild switch --flake ~/.config/nix-darwin`.
 
-> ⚠️ Pense à sélectionner **JetBrainsMono Nerd Font** comme police dans ton terminal
-> (WezTerm / Ghostty / Kitty) pour afficher correctement les icônes.
+### NixOS
+
+Add the same packages to `environment.systemPackages` (or `home.packages` with Home Manager).
+Mason downloads generic Linux binaries that cannot run on NixOS without a dynamic loader, so
+enable `nix-ld` as well:
+
+```nix
+{ pkgs, ... }:
+{
+  environment.systemPackages = with pkgs; [
+    neovim tree-sitter nodejs_24 gcc gnumake
+    ripgrep fd git curl unzip wget lazygit
+  ];
+
+  programs.nix-ld.enable = true;   # lets Mason binaries run
+}
+```
+
+Apply with `sudo nixos-rebuild switch --flake <path-to-your-flake>`.
+
+### Other Linux distributions (Nix package manager)
+
+Install [Nix](https://nixos.org/download/), then add the packages to your user profile:
+
+```bash
+nix profile add nixpkgs#{neovim,tree-sitter,nodejs_24,gcc,gnumake,ripgrep,fd,git,curl,unzip,wget,lazygit}
+```
+
+On older Nix versions, use `nix profile install` instead. Standalone Home Manager with the
+same list in `home.packages` works too. Mason binaries run natively on these distributions,
+so `nix-ld` is not needed.
+
+### Nerd Font
+
+Install the Nerd Font on the machine that runs the terminal (for example
+`nerd-fonts.jetbrains-mono` via nix-darwin), then select **JetBrainsMono Nerd Font** in the
+terminal (Ghostty, WezTerm, Kitty, ...). Without it, icons render as empty boxes.
+
+### Symfony language server
+
+[Symfony Language Tools](https://github.com/symfony/language-tools) is not packaged in nixpkgs.
+Download the archive for your platform from the
+[releases page](https://github.com/symfony/language-tools/releases) and put the `symfony-lsp`
+binary on your `PATH`. If your Mason registry provides it, `:MasonInstall symfony-lsp` works too.
+
+The server boots the Symfony kernel with `php bin/console`, so `php` must be on the `PATH`
+of the Neovim process. With per-project PHP (devenv, direnv), start Neovim from the project
+shell. It asks before executing application code in a workspace.
 
 ---
 
-## 🚀 Installation sur un nouveau poste
+## Installation
 
 ```bash
-# 1. (Optionnel) sauvegarder une éventuelle config existante
+# 1. (Optional) back up an existing configuration
 [ -d ~/.config/nvim ] && mv ~/.config/nvim ~/.config/nvim.bak
 
-# 2. Cloner cette config
-git clone <URL_DE_TON_REPO> ~/.config/nvim
+# 2. Clone this configuration
+git clone https://github.com/Gulivertx/nvim-dotfiles ~/.config/nvim
 
-# 3. Lancer Neovim : vim.pack installe automatiquement tous les plugins
-#    aux versions figées dans nvim-pack-lock.json
+# 3. Start Neovim: vim.pack installs every plugin at the versions
+#    pinned in nvim-pack-lock.json
 nvim
 ```
 
-Au premier lancement :
-- `vim.pack` télécharge les plugins (barre de progression en bas)
-- **Mason** installe les LSP/formatters (`intelephense`, `vtsls`, `twiggy`, `prettier`, `php-cs-fixer`…)
-- Les parsers Treesitter se compilent
+On first launch:
+- `vim.pack` downloads the plugins
+- **Mason** installs the language servers and formatters
+- Treesitter parsers are compiled
 
-Vérifie ensuite que tout est sain :
+Then check that everything is healthy:
 
 ```vim
 :checkhealth
-:Mason          " état des LSP/formatters
-:LspInfo        " sur un fichier .php / .ts
+:Mason                 " language servers and formatters
+:checkhealth vim.lsp   " servers attached to the current buffer
 ```
 
-### Licence Intelephense Premium (optionnel)
+### Intelephense Premium license (optional)
 
-Pour activer Intelephense Premium, place ta clé dans un fichier (non versionné) :
+To enable Intelephense Premium, store the key in a file outside the repository:
 
 ```bash
 mkdir -p ~/intelephense
-echo -n "TA_CLE_DE_LICENCE" > ~/intelephense/licence.txt
+echo -n "YOUR_LICENCE_KEY" > ~/intelephense/licence.txt
 ```
 
-Intelephense lit ce fichier automatiquement (orthographe **`licence`**, sans espace ni saut de ligne).
+Intelephense reads this file automatically (spelled **`licence`**, with no trailing newline).
 
 ---
 
-## 🔄 Mettre à jour
+## Updating
 
-### Mettre à jour les plugins
+### Plugins
 
 ```vim
-:lua vim.pack.update()        " met à jour tous les plugins
+:lua vim.pack.update()
 ```
 
-Après une mise à jour qui te convient, **régénère et committe le lockfile** pour figer
-les nouvelles versions :
+A preview of the changes opens; write it with `:w` to apply the update. Then commit the
+lockfile to pin the new versions:
 
 ```bash
 cd ~/.config/nvim
@@ -122,72 +188,93 @@ git commit -m "chore: update plugins"
 git push
 ```
 
-> Le fichier `nvim-pack-lock.json` est **suivi par git** : c'est lui qui garantit que tous
-> tes postes auront exactement les mêmes versions de plugins. Voir `:help vim.pack-lockfile`.
+`nvim-pack-lock.json` is **tracked by git**: it guarantees that every machine gets exactly the
+same plugin versions. See `:help vim.pack-lockfile`.
 
-### Mettre à jour les LSP / formatters (Mason)
+To remove a plugin, delete its `vim.pack.add` call, then run
+`:lua vim.pack.del({ 'plugin-name' })` so it is removed from disk and from the lockfile.
+
+### Language servers and formatters
 
 ```vim
-:Mason          " puis U pour tout mettre à jour
+:MasonToolsUpdate
 ```
 
-### Synchroniser ta config entre postes
+Or open `:Mason` and press `U` (shown only when updates are available). Mason tools live in
+`~/.local/share/nvim/mason`, so nothing needs to be committed afterwards.
+
+### Syncing between machines
 
 ```bash
 cd ~/.config/nvim
-git pull        # récupère les changements
-nvim            # vim.pack ajuste les plugins selon le lockfile
+git pull        # fetch the changes
+nvim            # new plugins are installed at the lockfile revision
 ```
 
----
+Then align the plugins already installed with the lockfile, and confirm with `:w`:
 
-## ⌨️ Raccourcis clés (en plus de kickstart)
+```vim
+:lua vim.pack.update(nil, { target = 'lockfile' })
+```
 
-`<leader>` = **barre d'espace**
-
-| Raccourci | Action |
-|-----------|--------|
-| `\` | Ouvre / révèle l'explorateur **neo-tree** |
-| `Tab` / `Shift+Tab` | Onglet (buffer) suivant / précédent |
-| `<leader>1`…`9` | Aller à l'onglet N |
-| `<leader>bp` | Choisir un onglet (pick) |
-| `<leader>bd` | Fermer le buffer courant |
-| `<leader>tm` | Basculer le rendu Markdown |
-| `<leader>` (puis attendre) | **which-key** : affiche tous les raccourcis |
-| `:Telescope keymaps` | Recherche floue de tous les raccourcis |
-
-Depuis l'écran d'accueil (dashboard) : `f` fichiers · `g` grep · `r` récents · `p` projets · `c` config.
+Plugins removed on the other machine stay on disk: delete them with `vim.pack.del()`
+(see `git diff -- nvim-pack-lock.json` for their names).
 
 ---
 
-## 🗂️ Structure
+## Key mappings (in addition to kickstart)
+
+`<leader>` = **Space**
+
+| Mapping | Action |
+|---------|--------|
+| `\` | Reveal the current file in **neo-tree** |
+| `<leader>e` | Toggle neo-tree |
+| `Tab` / `Shift+Tab` | Next / previous buffer |
+| `<leader>1` ... `9` | Go to buffer N |
+| `<leader>bp` | Pick a buffer |
+| `<leader>bd` | Close the current buffer |
+| `<leader>gg` | Lazygit |
+| `<leader>rr` | Reload buffers changed on disk |
+| `<leader>tm` | Toggle Markdown rendering |
+| `<leader>go` | Open Godot for the current project |
+| `<leader>` (then wait) | **which-key**: shows every mapping |
+| `:Telescope keymaps` | Fuzzy-search every mapping |
+
+From the dashboard: `f` files, `g` grep, `r` recent, `p` projects, `c` config.
+
+---
+
+## Structure
 
 ```
 ~/.config/nvim/
-├── init.lua                      # config principale (kickstart, modifiée)
-├── nvim-pack-lock.json           # versions figées des plugins (suivi par git)
+├── init.lua                      # main configuration (kickstart, modified)
+├── nvim-pack-lock.json           # pinned plugin versions (tracked by git)
 ├── lua/
-│   ├── custom/plugins/           # ⭐ personnalisations (voir tableau plus haut)
-│   │   └── init.lua              # charge automatiquement tous les .lua du dossier
-│   └── kickstart/plugins/        # modules optionnels kickstart (neo-tree activé, etc.)
+│   ├── custom/plugins/           # customizations (see the table above)
+│   │   └── init.lua              # loads every .lua file in this directory
+│   └── kickstart/plugins/        # optional kickstart modules (neo-tree enabled)
 └── README.md
 ```
 
-> Tout fichier `.lua` déposé dans `lua/custom/plugins/` est chargé automatiquement
-> au démarrage (sauf `init.lua`). Pour ajouter un plugin, crée un fichier qui appelle
-> `vim.pack.add { 'https://github.com/...' }` puis `require('...').setup {}`.
+Every `.lua` file placed in `lua/custom/plugins/` is loaded automatically on startup
+(except `init.lua`). To add a plugin, create a file that calls
+`vim.pack.add { 'https://github.com/...' }`, then `require('...').setup {}`.
 
 ---
 
-## 🛠️ Dépannage
+## Troubleshooting
 
-| Problème | Solution |
-|----------|----------|
-| `tree-sitter build … ENOENT` | Installe le CLI `tree-sitter` (voir prérequis nix) |
-| Icônes cassées (carrés) | Active une **Nerd Font** dans le terminal |
-| Mason : LSP ne s'installe pas | Vérifie que `node`/`npm` sont dans le PATH (`:lua print(vim.fn.exepath('npm'))`) |
-| Plugin cassé après update | `:lua vim.pack.update()` puis restaure le lockfile via `git checkout nvim-pack-lock.json` |
+| Problem | Solution |
+|---------|----------|
+| `tree-sitter build ... ENOENT` | Install the `tree-sitter` CLI (see requirements) |
+| Broken icons (empty boxes) | Select a **Nerd Font** in the terminal |
+| Mason server fails to install | Check that `node`/`npm` are on the `PATH`: `:lua print(vim.fn.exepath('npm'))` |
+| Mason server installed but does not start (NixOS) | Enable `programs.nix-ld.enable` |
+| `symfony_lsp` not attached | Check that `symfony-lsp` and `php` are on the `PATH`, then `:checkhealth vim.lsp` |
+| Plugin broken after an update | `git checkout HEAD -- nvim-pack-lock.json`, restart Neovim, then `:lua vim.pack.update({ 'plugin' }, { offline = true, target = 'lockfile' })` |
 
 ---
 
-Basé sur [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim) — licence MIT (voir `LICENSE.md`).
+Based on [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim), MIT license (see `LICENSE.md`).

@@ -1,9 +1,9 @@
 -- ============================================================
--- Dashboard / écran d'accueil via snacks.nvim
--- Chargé automatiquement par lua/custom/plugins/init.lua
+-- Dashboard / start screen via snacks.nvim
+-- Loaded automatically by lua/custom/plugins/init.lua
 -- ============================================================
 
--- Installation du plugin (vim.pack = gestionnaire intégré, comme dans init.lua)
+-- Plugin install (vim.pack = built-in manager, as in init.lua)
 vim.pack.add { 'https://github.com/folke/snacks.nvim' }
 
 -- ── Lazygit / Git keymaps ──────────────────────────────────
@@ -21,12 +21,12 @@ vim.keymap.set('n', '<leader>hr', function() require('gitsigns').reset_hunk() en
 vim.keymap.set('n', '<leader>hb', function() require('gitsigns').blame_line { full = true } end, { desc = '[H]unk [B]lame line' })
 
 require('snacks').setup {
-  -- On n'active que le module dashboard ici ; les autres modules snacks
-  -- (notifier, terminal, lazygit, etc.) peuvent être activés plus tard.
-  picker = { enabled = true }, -- requis pour Snacks.picker.projects()
-  projects = { enabled = true }, -- détection des projets récents
-  -- Snacks picker : configuration de la détection de projets
-  -- On ajoute project.godot comme marqueur racine et les dossiers de dev
+  -- Only the modules below are enabled; other snacks modules
+  -- (notifier, terminal, etc.) can be enabled later.
+  picker = { enabled = true }, -- required for Snacks.picker.projects()
+  projects = { enabled = true }, -- recent project detection
+  -- Snacks picker: project detection settings
+  -- Adds project.godot as a root marker, plus the dev directories
   picker = {
     enabled = true,
     sources = {
@@ -44,11 +44,11 @@ require('snacks').setup {
       },
     },
   },
-  lazygit = { enabled = true }, -- intégration lazygit flottant
+  lazygit = { enabled = true }, -- floating lazygit integration
   dashboard = {
     enabled = true,
     preset = {
-      -- Raccourcis affichés sur l'écran d'accueil
+      -- Shortcuts shown on the start screen
       keys = {
         { icon = ' ', key = 'f', desc = 'Find file',          action = ':lua Snacks.dashboard.pick("files")' },
         { icon = ' ', key = 'n', desc = 'New file',           action = ':ene | startinsert' },
@@ -69,7 +69,7 @@ require('snacks').setup {
     sections = {
       { section = 'header' },
       { section = 'keys', gap = 1, padding = 1 },
-      -- Pas de section 'startup' : elle dépend de lazy.nvim (non utilisé ici, on est sous vim.pack)
+      -- No 'startup' section: it depends on lazy.nvim (not used here, this config uses vim.pack)
     },
   },
 }

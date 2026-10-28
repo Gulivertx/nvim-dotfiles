@@ -1,20 +1,20 @@
 -- ============================================================
--- Colorscheme : Xcode Dark (esthétique « macOS Dark » d'Apple)
--- Chargé après init.lua.
+-- Colorscheme: Xcode Dark (Apple's "macOS Dark" look)
+-- Loaded after init.lua.
 -- ============================================================
 
 vim.pack.add { 'https://github.com/arzg/vim-colors-xcode' }
 
--- Variantes disponibles :
---   xcodedark    → Xcode Dark (mode sombre macOS)
---   xcodedarkhc  → Dark, contraste élevé
+-- Available variants:
+--   xcodedark    → Xcode Dark (macOS dark mode)
+--   xcodedarkhc  → Dark, high contrast
 --   xcodelight   → Xcode Light
---   xcodewwdc    → variante présentations WWDC
+--   xcodewwdc    → WWDC presentation variant
 vim.cmd.colorscheme 'xcodedark'
 
 -- ------------------------------------------------------------
--- Fond transparent : on laisse apparaître la couleur de fond
--- du terminal au lieu de celle du thème.
+-- Transparent background: let the terminal background show
+-- through instead of the theme's own.
 -- ------------------------------------------------------------
 local function make_transparent()
   for _, group in ipairs {
@@ -32,7 +32,7 @@ end
 
 make_transparent()
 
--- Réappliquer si le colorscheme est rechargé.
+-- Reapply when the colorscheme is reloaded.
 vim.api.nvim_create_autocmd('ColorScheme', {
   callback = make_transparent,
 })
