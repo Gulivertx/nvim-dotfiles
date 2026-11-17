@@ -23,6 +23,9 @@ require('neo-tree').setup {
     use_libuv_file_watcher = true,            -- watch the disk in real time (agents, git...)
     follow_current_file = { enabled = true }, -- highlight the current file
     hijack_netrw_behavior = 'open_current',   -- replace netrw
+    filtered_items = {
+      hide_dotfiles = false, -- show hidden files (.env, .gitignore...) by default
+    },
   },
   window = {
     width = 35,
