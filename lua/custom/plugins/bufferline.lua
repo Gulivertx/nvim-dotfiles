@@ -7,6 +7,45 @@ vim.pack.add {
   'https://github.com/nvim-tree/nvim-web-devicons',
 }
 
+-- ------------------------------------------------------------
+-- Xcode Dark colors (palette in lua/custom/xcode.lua).
+--   bar background → editor background
+--   inactive tabs  → dark gray, dimmed text
+--   selected tab   → mid gray (like the statusline), bright text, blue indicator
+-- bufferline calls this with its computed defaults: every group keeps its
+-- default foreground (diagnostics, etc.) and only gets the right background.
+-- ------------------------------------------------------------
+local xcode = require 'custom.xcode'
+
+local function xcode_highlights(defaults)
+  local hl = vim.deepcopy(defaults.highlights)
+  local bg = { fill = xcode.bg, inactive = xcode.bg_dark, visible = xcode.bg_dark, selected = xcode.bg_mid }
+
+  for name, group in pairs(hl) do
+    local state = name:match '_selected$' and 'selected' or name:match '_visible$' and 'visible' or 'inactive'
+    group.bg = bg[state]
+    -- Slanted separators are drawn in the bar color to cut the tab corners
+    if name:match 'separator' then group.fg = bg.fill end
+  end
+
+  hl.fill = { bg = bg.fill }
+  hl.trunc_marker = { fg = xcode.comment, bg = bg.fill }
+  hl.offset_separator = { fg = xcode.bg_mid, bg = bg.fill }
+  hl.group_separator = { fg = bg.fill, bg = bg.fill }
+
+  hl.background.fg = xcode.comment
+  hl.buffer_visible.fg = xcode.fg
+  hl.buffer_selected = { fg = xcode.fg, bg = bg.selected, bold = true, italic = false }
+  hl.indicator_selected = { fg = xcode.blue, bg = bg.selected }
+  hl.tab = { fg = xcode.comment, bg = bg.inactive }
+  hl.tab_selected = { fg = xcode.fg, bg = bg.selected, bold = true }
+  for _, state in ipairs { '', '_visible', '_selected' } do
+    hl['modified' .. state].fg = xcode.orange
+    hl['pick' .. state].fg = xcode.pink
+  end
+  return hl
+end
+
 require('bufferline').setup {
   options = {
     mode = 'buffers', -- one tab per buffer (use 'tabs' for native tabpages)
@@ -24,6 +63,7 @@ require('bufferline').setup {
       },
     },
   },
+  highlights = xcode_highlights,
 }
 
 -- Buffer keymaps (LazyVim layout)

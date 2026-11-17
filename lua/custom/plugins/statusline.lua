@@ -8,19 +8,37 @@ vim.pack.add {
   -- nvim-web-devicons already loaded by bufferline
 }
 
--- Theme: 'auto' reads the highlight groups of the active colorscheme (xcodedark here).
--- If you change colorscheme, the statusline adapts automatically.
--- Other options: 'auto', 'onedark', 'gruvbox', 'tokyonight', ...
+-- Theme: dedicated Xcode Dark palette (taken from vim-colors-xcode/xcodedark).
+-- lualine has no built-in theme for xcodedark, and 'auto' only gives an
+-- approximation (it also loses the background, made transparent in colorscheme.lua).
+-- If you switch to another colorscheme, set lualine_theme = 'auto' instead.
 --
--- How it works:
---   section A  → bg/fg from hl 'Normal' + an accent color per mode
---   section B  → bg from 'StatusLine', fg from 'Normal'
---   section C  → colors from 'StatusLineNC'
---
--- To inspect the groups available in the current theme:
---   :hi Normal
---   :Telescope highlights  (if telescope is installed)
-local lualine_theme = 'auto'
+--   section A  → accent color per mode
+--   section B  → mode color on a mid gray
+--   section C  → main text on a dark gray
+local xcode = require 'custom.xcode'
+
+local function mode_colors(accent)
+  return {
+    a = { bg = accent, fg = xcode.bg, gui = 'bold' },
+    b = { bg = xcode.bg_mid, fg = accent },
+    c = { bg = xcode.bg_dark, fg = xcode.fg },
+  }
+end
+
+local lualine_theme = {
+  normal   = mode_colors(xcode.blue),
+  insert   = mode_colors(xcode.green),
+  visual   = mode_colors(xcode.purple),
+  replace  = mode_colors(xcode.pink),
+  command  = mode_colors(xcode.yellow),
+  terminal = mode_colors(xcode.orange),
+  inactive = {
+    a = { bg = xcode.bg_dark, fg = xcode.comment },
+    b = { bg = xcode.bg_dark, fg = xcode.comment },
+    c = { bg = xcode.bg_dark, fg = xcode.comment },
+  },
+}
 
 -- Component: git branch (Nerd Font icon)
 local function git_branch()
