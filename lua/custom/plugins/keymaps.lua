@@ -205,11 +205,9 @@ map('n', '[q', vim.cmd.cprev, { desc = 'Previous Quickfix' })
 map('n', ']q', vim.cmd.cnext, { desc = 'Next Quickfix' })
 
 -- ── Git ────────────────────────────────────────────────────
-map('n', '<leader>gg', function() Snacks.lazygit { cwd = root() } end, { desc = 'Lazygit (Root Dir)' })
+-- <leader>gg / <leader>gl / <leader>gf: Neogit, defined in neogit.lua
 map('n', '<leader>gG', function() Snacks.lazygit() end, { desc = 'Lazygit (cwd)' })
-map('n', '<leader>gl', function() Snacks.lazygit.log { cwd = root() } end, { desc = 'Git Log' })
 map('n', '<leader>gL', function() Snacks.lazygit.log() end, { desc = 'Git Log (cwd)' })
-map('n', '<leader>gf', function() Snacks.lazygit.log_file() end, { desc = 'Git Current File History' })
 map('n', '<leader>gb', function() Snacks.git.blame_line() end, { desc = 'Git Blame Line' })
 map({ 'n', 'x' }, '<leader>gB', function() Snacks.gitbrowse() end, { desc = 'Git Browse (open)' })
 map({ 'n', 'x' }, '<leader>gY', function()

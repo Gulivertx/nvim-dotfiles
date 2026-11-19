@@ -263,7 +263,7 @@ The most useful ones:
 | `<leader>cd` | Line diagnostics |
 | `]d` / `[d` | Next / previous diagnostic |
 | `]h` / `[h` | Next / previous git hunk |
-| `<leader>gg` | Lazygit |
+| `<leader>gg` / `<leader>gl` / `<leader>gf` | Neogit status / log / current file history |
 | `s` | Flash jump |
 | `gsa` / `gsd` / `gsr` | Add / delete / replace surrounding |
 | `<C-s>` | Save |

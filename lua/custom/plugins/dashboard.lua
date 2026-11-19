@@ -6,7 +6,7 @@
 -- Plugin install (vim.pack = built-in manager, as in init.lua)
 vim.pack.add { 'https://github.com/folke/snacks.nvim' }
 
--- Git and lazygit keymaps are in keymaps.lua
+-- Git keymaps are in keymaps.lua (Neogit: <leader>gg/gl/gf in neogit.lua)
 
 require('snacks').setup {
   -- Only the modules below are enabled; other snacks modules
