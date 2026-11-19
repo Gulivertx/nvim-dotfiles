@@ -118,6 +118,12 @@ do
   -- Don't show the mode, since it's already in the status line
   vim.o.showmode = false
 
+  -- Hide the command line when unused so the statusline sits on the last row
+  -- (aligned with the tmux status bar). ui2 renders messages/cmdline in floating
+  -- windows, avoiding "Press ENTER" prompts with cmdheight=0.
+  vim.o.cmdheight = 0
+  pcall(function() require('vim._core.ui2').enable {} end)
+
   -- Sync clipboard between OS and Neovim.
   --  Schedule the setting after `UiEnter` because it can increase startup-time.
   --  Remove this option if you want your OS clipboard to remain independent.
