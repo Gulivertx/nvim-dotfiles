@@ -6,9 +6,9 @@
 --   markdown.lua (<leader>um), flash.lua (s / S).
 -- ============================================================
 
--- snacks.nvim is set up in dashboard.lua; adding it here makes it
--- available regardless of the order files in this directory are loaded.
-vim.pack.add { 'https://github.com/folke/snacks.nvim' }
+-- snacks.nvim is installed and set up in dashboard.lua; requiring that module
+-- first makes it available regardless of the order files in this directory are loaded.
+require 'custom.plugins.dashboard'
 local Snacks = require 'snacks'
 
 local map = vim.keymap.set

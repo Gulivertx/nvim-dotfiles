@@ -24,14 +24,14 @@ blink.cmp, mini.nvim, ...), the following customizations live in
 |------|---------|
 | `keymaps.lua` | Keymaps following the [LazyVim](https://www.lazyvim.org/keymaps) layout |
 | `flash.lua` | Jump anywhere on screen with `s` / `S` ([flash.nvim](https://github.com/folke/flash.nvim)) |
-| `dashboard.lua` | Start screen ([snacks.nvim](https://github.com/folke/snacks.nvim)) with logo, recent files, projects, lazygit |
+| `dashboard.lua` | Start screen ([snacks.nvim](https://github.com/folke/snacks.nvim)) with logo, recent files, projects, git status |
 | `colorscheme.lua` | **Xcode Dark** theme ([vim-colors-xcode](https://github.com/arzg/vim-colors-xcode)) with a transparent background |
 | `statusline.lua` | Statusline ([lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)) with git branch, diff and diagnostics |
 | `bufferline.lua` | Tab bar at the top ([bufferline.nvim](https://github.com/akinsho/bufferline.nvim)) |
 | `neotree-autoopen.lua` | Opens the **neo-tree** explorer on startup when inside a project |
 | `autoreload.lua` | Reloads buffers changed on disk by external tools (coding agents, git) |
 | `markdown.lua` | In-buffer Markdown rendering ([render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim)) |
-| `gamedev.lua` | Godot / GDScript support (`:GodotOpen`, file types, LSP warning) |
+| `neogit.lua` | Git interface ([Neogit](https://github.com/NeogitOrg/neogit) + [diffview.nvim](https://github.com/sindrets/diffview.nvim)) |
 | `which-key-theme.lua` | Aligns which-key colors and border with the theme |
 | `snacks-theme.lua` | Aligns snacks floating windows (picker) with the editor background |
 
@@ -44,9 +44,8 @@ blink.cmp, mini.nvim, ...), the following customizations live in
 | `vtsls` | TypeScript / JavaScript | Mason |
 | `lua_ls` | Lua | Mason |
 | `rust_analyzer` | Rust | rustup |
-| `gdscript` | GDScript | Built into Godot (port 6005) |
 
-Formatters: `stylua` and `gdscript-formatter` (Mason), `rustfmt` (rustup).
+Formatters: `stylua` (Mason), `rustfmt` (rustup).
 
 ---
 
@@ -62,7 +61,7 @@ The configuration relies on a few external tools:
 | `gcc`, `gnumake` | Compile Treesitter parsers |
 | `ripgrep`, `fd` | Search (Telescope / snacks picker) |
 | `git`, `curl`, `unzip`, `wget` | Plugin and Mason downloads |
-| `lazygit` | Optional, git UI |
+| `lazygit` | Optional, alternative git UI (`<leader>gG` / `<leader>gL`) |
 | A Nerd Font | Icons (dashboard, neo-tree, bufferline, statusline) |
 
 ### macOS (nix-darwin)
@@ -264,6 +263,7 @@ The most useful ones:
 | `]d` / `[d` | Next / previous diagnostic |
 | `]h` / `[h` | Next / previous git hunk |
 | `<leader>gg` / `<leader>gl` / `<leader>gf` | Neogit status / log / current file history |
+| `<leader>gG` / `<leader>gL` | Lazygit / lazygit log |
 | `s` | Flash jump |
 | `gsa` / `gsd` / `gsr` | Add / delete / replace surrounding |
 | `<C-s>` | Save |

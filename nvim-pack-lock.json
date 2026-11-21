@@ -94,10 +94,6 @@
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim",
       "version": ">=0.0.0"
     },
-    "sequoia.nvim": {
-      "rev": "4d4a3c7a2c96b5e2d18da4eca0ebfb8987fc2fed",
-      "src": "https://github.com/forest-nvim/sequoia.nvim"
-    },
     "snacks.nvim": {
       "rev": "882c996cf28183f4d63640de0b4c02ec886d01f2",
       "src": "https://github.com/folke/snacks.nvim"
@@ -118,17 +114,9 @@
       "rev": "31e3c38ce9b29781e4422fc0322eb0a21f4e8668",
       "src": "https://github.com/folke/todo-comments.nvim"
     },
-    "tokyonight.nvim": {
-      "rev": "cdc07ac78467a233fd62c493de29a17e0cf2b2b6",
-      "src": "https://github.com/folke/tokyonight.nvim"
-    },
     "vim-colors-xcode": {
       "rev": "2329a3ed092b4f72e9361a94567a5431e36e7d9c",
       "src": "https://github.com/arzg/vim-colors-xcode"
-    },
-    "vim-godot": {
-      "rev": "2cecd0c83a7b3f012142a584d53a3a51be246c8e",
-      "src": "https://github.com/habamax/vim-godot"
     },
     "which-key.nvim": {
       "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",

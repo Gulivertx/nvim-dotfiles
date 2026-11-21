@@ -3,8 +3,7 @@
 -- Loaded automatically by lua/custom/plugins/init.lua
 -- ============================================================
 
--- Dependencies
-vim.pack.add { 'https://github.com/nvim-lua/plenary.nvim' }
+-- Dependencies (plenary.nvim is already added in init.lua, with Telescope)
 vim.pack.add { 'https://github.com/sindrets/diffview.nvim' } -- built-in diff view (optional but recommended)
 
 -- Main plugin
