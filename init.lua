@@ -177,6 +177,17 @@ do
   -- instead raise a dialog asking if you wish to save the current file(s)
   -- See `:help 'confirm'`
   vim.o.confirm = true
+
+  -- Set the terminal window title to the file name and the current mode
+  -- See `:help 'title'` and `:help 'titlestring'`
+  vim.o.title = true
+  -- Title to put back when leaving Neovim: the directory it was started from
+  vim.o.titleold = vim.fn.fnamemodify(vim.fn.getcwd(), ':~')
+  vim.api.nvim_create_autocmd({ 'ModeChanged', 'BufEnter' }, {
+    desc = 'Update the terminal title with the file name and current mode',
+    group = vim.api.nvim_create_augroup('custom-titlestring', { clear = true }),
+    callback = function() vim.o.titlestring = '%t - NVIM [' .. vim.fn.mode() .. ']' end,
+  })
 end
 
 -- ============================================================
