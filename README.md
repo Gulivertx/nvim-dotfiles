@@ -28,7 +28,6 @@ blink.cmp, mini.nvim, ...), the following customizations live in
 | `colorscheme.lua` | **Xcode Dark** theme ([vim-colors-xcode](https://github.com/arzg/vim-colors-xcode)) with a transparent background |
 | `statusline.lua` | Statusline ([lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)) with git branch, diff and diagnostics |
 | `bufferline.lua` | Tab bar at the top ([bufferline.nvim](https://github.com/akinsho/bufferline.nvim)) |
-| `neotree-autoopen.lua` | Opens the **neo-tree** explorer on startup when inside a project |
 | `autoreload.lua` | Reloads buffers changed on disk by external tools (coding agents, git) |
 | `markdown.lua` | In-buffer Markdown rendering ([render-markdown.nvim](https://github.com/MeanderingProgrammer/render-markdown.nvim)) |
 | `neogit.lua` | Git interface ([Neogit](https://github.com/NeogitOrg/neogit) + [diffview.nvim](https://github.com/sindrets/diffview.nvim)) |
