@@ -23,11 +23,16 @@ local function make_transparent()
     'NormalFloat',
     'FloatBorder',
     'SignColumn',
-    'LineNr',
     'EndOfBuffer',
   } do
     vim.api.nvim_set_hl(0, group, { bg = 'none' })
   end
+
+  -- Line numbers: dimmed gray, the current line's number in bright text
+  -- (CursorLineNr keeps the theme's cursorline background).
+  local xcode = require 'custom.xcode'
+  vim.api.nvim_set_hl(0, 'LineNr', { fg = xcode.comment, bg = 'none' })
+  vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = xcode.fg, bg = xcode.bg_dark })
 end
 
 make_transparent()

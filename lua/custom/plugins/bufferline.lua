@@ -11,7 +11,8 @@ vim.pack.add {
 -- Xcode Dark colors (palette in lua/custom/xcode.lua).
 --   bar background → editor background
 --   inactive tabs  → dark gray, dimmed text
---   selected tab   → mid gray (like the statusline), bright text, blue indicator
+--   selected tab   → mid gray (like the statusline), bright text,
+--                    teal line underneath (indicator style 'underline')
 -- bufferline calls this with its computed defaults: every group keeps its
 -- default foreground (diagnostics, etc.) and only gets the right background.
 -- ------------------------------------------------------------
@@ -24,8 +25,12 @@ local function xcode_highlights(defaults)
   for name, group in pairs(hl) do
     local state = name:match '_selected$' and 'selected' or name:match '_visible$' and 'visible' or 'inactive'
     group.bg = bg[state]
-    -- Slanted separators are drawn in the bar color to cut the tab corners
     if name:match 'separator' then group.fg = bg.fill end
+    -- Colored line under the whole active tab (every selected segment)
+    if state == 'selected' then
+      group.underline = true
+      group.sp = xcode.teal
+    end
   end
 
   hl.fill = { bg = bg.fill }
@@ -35,10 +40,10 @@ local function xcode_highlights(defaults)
 
   hl.background.fg = xcode.comment
   hl.buffer_visible.fg = xcode.fg
-  hl.buffer_selected = { fg = xcode.fg, bg = bg.selected, bold = true, italic = false }
-  hl.indicator_selected = { fg = xcode.blue, bg = bg.selected }
+  hl.buffer_selected = { fg = xcode.fg, bg = bg.selected, bold = true, italic = false, underline = true, sp = xcode.teal }
+  hl.indicator_selected = { fg = xcode.teal, bg = bg.selected, underline = true, sp = xcode.teal }
   hl.tab = { fg = xcode.comment, bg = bg.inactive }
-  hl.tab_selected = { fg = xcode.fg, bg = bg.selected, bold = true }
+  hl.tab_selected = { fg = xcode.fg, bg = bg.selected, bold = true, underline = true, sp = xcode.teal }
   for _, state in ipairs { '', '_visible', '_selected' } do
     hl['modified' .. state].fg = xcode.orange
     hl['pick' .. state].fg = xcode.pink
@@ -50,9 +55,12 @@ require('bufferline').setup {
   options = {
     mode = 'buffers', -- one tab per buffer (use 'tabs' for native tabpages)
     diagnostics = 'nvim_lsp', -- show LSP errors/warnings in the tab
-    show_buffer_close_icons = true,
+    show_buffer_icons = false, -- plain file names, no filetype icon
+    show_buffer_close_icons = false,
     show_close_icon = false,
-    separator_style = 'slant',
+    -- Flat rectangular tabs: no separators, active tab underlined
+    separator_style = { '', '' },
+    indicator = { style = 'underline' },
     -- Leave room for the neo-tree sidebar on the left
     offsets = {
       {
