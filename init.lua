@@ -376,8 +376,9 @@ do
   -- Useful plugin to show you pending keybinds.
   vim.pack.add { gh 'folke/which-key.nvim' }
   require('which-key').setup {
-    -- Delay between pressing a key and opening which-key (milliseconds)
-    delay = 0,
+    -- Popup automatique désactivé : la bande de my-shortcuts prend le relais.
+    -- La séquence reste en attente, et ␣? ouvre toujours which-key à la main.
+    delay = 1000000,
     icons = { mappings = vim.g.have_nerd_font },
     win = {
       -- Custom border (Neovim 8-element format):
