@@ -247,15 +247,15 @@ The most useful ones:
 
 | Mapping | Action |
 |---------|--------|
-| `<leader><space>` | Find files (project root) |
-| `<leader>/` | Grep (project root) |
-| `<leader>,` | Open buffers |
+| `<leader>ff` | Find files (project root) |
+| `<leader>sg` | Grep (project root) |
+| `<leader>fb` | Open buffers |
 | `<leader>fr` | Recent files |
 | `<leader>e` | Toggle neo-tree |
 | `Shift+h` / `Shift+l` | Previous / next buffer |
 | `<leader>bd` | Delete buffer |
 | `gd` / `gr` | Go to definition / references |
-| `K` | Hover documentation |
+| `K` | Hover documentation (Neovim default) |
 | `<leader>ca` / `<leader>cr` | Code action / rename |
 | `<leader>cf` | Format |
 | `<leader>cd` | Line diagnostics |
@@ -283,7 +283,7 @@ From the dashboard: `f` files, `g` grep, `r` recent, `p` projects, `c` config.
 ├── lua/
 │   ├── custom/plugins/           # customizations (see the table above)
 │   │   └── init.lua              # loads every .lua file in this directory
-│   └── kickstart/plugins/        # optional kickstart modules (neo-tree enabled)
+│   └── kickstart/plugins/        # neo-tree (the only kickstart module kept)
 └── README.md
 ```
 

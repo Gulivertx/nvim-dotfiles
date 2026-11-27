@@ -26,11 +26,6 @@ map({ 'n', 'x' }, '<Down>', "v:count == 0 ? 'gj' : 'j'", { desc = 'Down', expr =
 map({ 'n', 'x' }, 'k', "v:count == 0 ? 'gk' : 'k'", { desc = 'Up', expr = true, silent = true })
 map({ 'n', 'x' }, '<Up>', "v:count == 0 ? 'gk' : 'k'", { desc = 'Up', expr = true, silent = true })
 
--- Resize windows (window navigation with <C-h/j/k/l> is in init.lua)
-map('n', '<C-Up>', '<Cmd>resize +2<CR>', { desc = 'Increase Window Height' })
-map('n', '<C-Down>', '<Cmd>resize -2<CR>', { desc = 'Decrease Window Height' })
-map('n', '<C-Left>', '<Cmd>vertical resize -2<CR>', { desc = 'Decrease Window Width' })
-map('n', '<C-Right>', '<Cmd>vertical resize +2<CR>', { desc = 'Increase Window Width' })
 
 -- Move lines
 map('n', '<A-j>', "<Cmd>execute 'move .+' . v:count1<CR>==", { desc = 'Move Down' })
@@ -54,16 +49,15 @@ map('n', 'N', "'nN'[v:searchforward].'zv'", { expr = true, desc = 'Prev Search R
 map({ 'x', 'o' }, 'N', "'nN'[v:searchforward]", { expr = true, desc = 'Prev Search Result' })
 
 -- Undo break-points in insert mode
-map('i', ',', ',<C-g>u')
-map('i', '.', '.<C-g>u')
-map('i', ';', ';<C-g>u')
+map('i', ',', ',<C-g>u', { desc = 'which_key_ignore' })
+map('i', '.', '.<C-g>u', { desc = 'which_key_ignore' })
+map('i', ';', ';<C-g>u', { desc = 'which_key_ignore' })
 
 map({ 'i', 'x', 'n', 's' }, '<C-s>', '<Cmd>w<CR><Esc>', { desc = 'Save File' })
-map('n', '<leader>K', '<Cmd>norm! K<CR>', { desc = 'Keywordprg' })
 
 -- Keep the selection when indenting
-map('x', '<', '<gv')
-map('x', '>', '>gv')
+map('x', '<', '<gv', { desc = 'Indent Left' })
+map('x', '>', '>gv', { desc = 'Indent Right' })
 
 -- Comments
 map('n', 'gco', 'o<Esc>Vcx<Esc><Cmd>normal gcc<CR>fxa<BS>', { desc = 'Add Comment Below' })
@@ -102,11 +96,6 @@ map({ 'n', 't' }, '<C-/>', function() Snacks.terminal(nil, { cwd = root() }) end
 map({ 'n', 't' }, '<C-_>', function() Snacks.terminal(nil, { cwd = root() }) end, { desc = 'which_key_ignore' })
 
 -- ── Search (Telescope) ─────────────────────────────────────
-map('n', '<leader><space>', function() builtin.find_files { cwd = root() } end, { desc = 'Find Files (Root Dir)' })
-map('n', '<leader>,', function() builtin.buffers { sort_mru = true, sort_lastused = true } end, { desc = 'Buffers' })
-map('n', '<leader>/', function() builtin.live_grep { cwd = root() } end, { desc = 'Grep (Root Dir)' })
-map('n', '<leader>:', builtin.command_history, { desc = 'Command History' })
-
 map('n', '<leader>fb', function() builtin.buffers { sort_mru = true, sort_lastused = true } end, { desc = 'Buffers' })
 map('n', '<leader>fc', function() builtin.find_files { cwd = vim.fn.stdpath 'config', follow = true } end, { desc = 'Find Config File' })
 map('n', '<leader>ff', function() builtin.find_files { cwd = root() } end, { desc = 'Find Files (Root Dir)' })
@@ -131,11 +120,9 @@ map('n', '<leader>sh', builtin.help_tags, { desc = 'Help Pages' })
 map('n', '<leader>sH', builtin.highlights, { desc = 'Highlights' })
 map('n', '<leader>sj', builtin.jumplist, { desc = 'Jumps' })
 map('n', '<leader>sk', builtin.keymaps, { desc = 'Keymaps' })
-map('n', '<leader>sl', builtin.loclist, { desc = 'Location List' })
 map('n', '<leader>sm', builtin.marks, { desc = 'Marks' })
 map('n', '<leader>sM', builtin.man_pages, { desc = 'Man Pages' })
 map('n', '<leader>so', builtin.vim_options, { desc = 'Options' })
-map('n', '<leader>sq', builtin.quickfix, { desc = 'Quickfix List' })
 map('n', '<leader>sR', builtin.resume, { desc = 'Resume' })
 map({ 'n', 'x' }, '<leader>sw', function() builtin.grep_string { cwd = root() } end, { desc = 'Word / Selection (Root Dir)' })
 map({ 'n', 'x' }, '<leader>sW', builtin.grep_string, { desc = 'Word / Selection (cwd)' })
@@ -145,6 +132,15 @@ map('n', '<leader>uC', function() builtin.colorscheme { enable_preview = true } 
 
 map('n', ']t', function() require('todo-comments').jump_next() end, { desc = 'Next Todo Comment' })
 map('n', '[t', function() require('todo-comments').jump_prev() end, { desc = 'Previous Todo Comment' })
+
+-- Neovim's default gr* LSP mappings (grn, gra, grr, gri, grt, grx) can never be typed:
+-- the buffer-local `gr` (references, nowait) below fires first. Their actions live on
+-- <leader>cr, <leader>ca, gr, gI, gy and <leader>cc. gO keeps its action, with a readable name.
+for _, lhs in ipairs { 'grn', 'gra', 'grr', 'gri', 'grt', 'grx' } do
+  pcall(vim.keymap.del, 'n', lhs)
+end
+pcall(vim.keymap.del, 'x', 'gra')
+map('n', 'gO', function() vim.lsp.buf.document_symbol() end, { desc = 'Document Symbols (loclist)' })
 
 -- ── LSP (buffer-local, when a server attaches) ─────────────
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -160,9 +156,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     bmap('n', 'gI', function() builtin.lsp_implementations { reuse_win = true } end, 'Goto Implementation')
     bmap('n', 'gy', function() builtin.lsp_type_definitions { reuse_win = true } end, 'Goto T[y]pe Definition')
     bmap('n', 'gD', vim.lsp.buf.declaration, 'Goto Declaration')
-    bmap('n', 'K', function() vim.lsp.buf.hover() end, 'Hover')
     bmap('n', 'gK', function() vim.lsp.buf.signature_help() end, 'Signature Help')
-    bmap('i', '<C-k>', function() vim.lsp.buf.signature_help() end, 'Signature Help')
 
     bmap({ 'n', 'x' }, '<leader>ca', vim.lsp.buf.code_action, 'Code Action')
     bmap({ 'n', 'x' }, '<leader>cc', vim.lsp.codelens.run, 'Run Codelens')
@@ -201,8 +195,6 @@ map('n', '<leader>xq', function()
   local ok, err = pcall(vim.fn.getqflist({ winid = 0 }).winid ~= 0 and vim.cmd.cclose or vim.cmd.copen)
   if not ok and err then vim.notify(err, vim.log.levels.ERROR) end
 end, { desc = 'Quickfix List' })
-map('n', '[q', vim.cmd.cprev, { desc = 'Previous Quickfix' })
-map('n', ']q', vim.cmd.cnext, { desc = 'Next Quickfix' })
 
 -- ── Git ────────────────────────────────────────────────────
 -- <leader>gg / <leader>gl / <leader>gf: Neogit, defined in neogit.lua
@@ -231,7 +223,6 @@ map('n', '[H', function() gitsigns.nav_hunk 'first' end, { desc = 'First Hunk' }
 map({ 'n', 'x' }, '<leader>ghs', '<Cmd>Gitsigns stage_hunk<CR>', { desc = 'Stage Hunk' })
 map({ 'n', 'x' }, '<leader>ghr', '<Cmd>Gitsigns reset_hunk<CR>', { desc = 'Reset Hunk' })
 map('n', '<leader>ghS', gitsigns.stage_buffer, { desc = 'Stage Buffer' })
-map('n', '<leader>ghu', gitsigns.undo_stage_hunk, { desc = 'Undo Stage Hunk' })
 map('n', '<leader>ghR', gitsigns.reset_buffer, { desc = 'Reset Buffer' })
 map('n', '<leader>ghp', gitsigns.preview_hunk_inline, { desc = 'Preview Hunk Inline' })
 map('n', '<leader>ghb', function() gitsigns.blame_line { full = true } end, { desc = 'Blame Line' })
@@ -249,5 +240,4 @@ Snacks.toggle.line_number():map '<leader>ul'
 Snacks.toggle.option('conceallevel', { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2, name = 'Conceal Level' }):map '<leader>uc'
 Snacks.toggle.option('showtabline', { off = 0, on = vim.o.showtabline > 0 and vim.o.showtabline or 2, name = 'Tabline' }):map '<leader>uA'
 Snacks.toggle.treesitter():map '<leader>uT'
-Snacks.toggle.option('background', { off = 'light', on = 'dark', name = 'Dark Background' }):map '<leader>ub'
 Snacks.toggle.inlay_hints():map '<leader>uh'
